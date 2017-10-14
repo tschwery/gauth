@@ -142,7 +142,16 @@ func main() {
 	prevTS := currentTS - 1
 	nextTS := currentTS + 1
 
-	fmt.Println("           prev   curr   next")
+	maxWidth := 10
+	for _, record := range cfg {
+		cWidth := len(record[0])
+		if cWidth > maxWidth {
+			maxWidth = cWidth
+		}
+	}
+	nameFmt := fmt.Sprintf("%%-%ds", maxWidth)
+
+	fmt.Printf(nameFmt+" prev   curr   next\n", "")
 	for _, record := range cfg {
 		name := record[0]
 		encodeType := "TOTP"
@@ -153,7 +162,7 @@ func main() {
 		prevToken := authCodeOrDie(secret, prevTS, encodeType)
 		currentToken := authCodeOrDie(secret, currentTS, encodeType)
 		nextToken := authCodeOrDie(secret, nextTS, encodeType)
-		fmt.Printf("%-10s % 6s % 6s % 6s\n", name, prevToken, currentToken, nextToken)
+		fmt.Printf(nameFmt+" % 6s % 6s % 6s\n", name, prevToken, currentToken, nextToken)
 	}
 	fmt.Printf("[%-29s]\n", strings.Repeat("=", progress))
 }
